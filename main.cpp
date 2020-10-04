@@ -1,11 +1,28 @@
 /* Written by Unbinilium - Jan, 12, 2020 :( */
 
 #include <iostream>
+using namespace std;
 
+#include <serial.hpp>
 #include <color_area.hpp>
+using namespace ubn;
 
 int main()
 {
+    ubn::SerialProp serial_prop = { "/dev/ttyUSB0", //TTY device name
+                                    115200,         //Baudrate
+                                    0,              //Opened serial
+                                    10000,          //Recieve delay (micro second)
+                                    false,          /*Serial status
+                                                        false->serial not opened
+                                                        ture->serial opend at fd
+                                                    */
+                                    true            /*Serial keepalive
+                                                        false->close serial after using
+                                                        ture->keepalive serial
+                                                    */
+                                  };
+
     ubn::StreamProp stream_prop = {
         0,                  //Camera index
         cv::CAP_ANY,        //API id
@@ -26,7 +43,7 @@ int main()
                              90->camera face to the front
                              */
         3,                   //Delay of waitkey between processing 2 frame
-        30                   //Frame read count
+        80                   //Frame read count
 
     };
     

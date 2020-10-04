@@ -1,12 +1,16 @@
 /**
   * @name color_area.hpp
   * @namespace ubn
+  * @brief unsigned int colorArea(ubn::StreamProp stream_prop, ubn::RectProp rect_prop, std::vector<ubn::ColorRange> color)
   * @brief Find the maxium color area from camera
   * @param StreamProp, RectProp, ColorRange
   * @return Unsigned integer matches the color name index
   * @author Unbinilium(iChizer0, Chen Xiangjie)
-  * @date 2020-01-22
+  * @date 2020-01-12
  **/
+
+#ifndef UBN_COLOR_AREA_HPP
+#define UBN_COLOR_AREA_HPP
 
 #include <vector>
 #include <string>
@@ -20,8 +24,8 @@
 
 namespace ubn {
 
-#ifndef UBN_STRUCT
-#define UBN_STRUCT
+#ifndef UBN_COLOR_AREA_STRUCT
+#define UBN_COLOR_AREA_STRUCT
 
     struct StreamProp
     {
@@ -62,9 +66,6 @@ namespace ubn {
     {}
 
 #endif
-
-#ifndef UBN_COLOR_AREA
-#define UBN_COLOR_AREA
 
     template<typename T>
     static auto calPointDist(T &p1, T &p2)
@@ -380,6 +381,11 @@ namespace ubn {
                 }
             }
 
+            if(color_area[color_area_max_tag].area_sum < color[color_area_max_tag].threshold)
+            {
+                break;
+            }
+
             std::cout << "colorArea: " << color[color_area_max_tag].color_name << "->" << color_area[color_area_max_tag].area_sum << std::endl;
 
 #ifdef DEBUG
@@ -489,6 +495,6 @@ namespace ubn {
 #endif
 
     }
-#endif
-
 }
+
+#endif
