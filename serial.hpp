@@ -39,41 +39,41 @@ namespace ubn {
 
   struct MoveData
   {
-    char move_type;
-    int move_argv;
-    char move_direction;
-    int move_direction_offset;
-    char move_rotation;
-    int move_rotation_offset;
+    char move_type;             //Move type
+    int move_argv;              //Move arguements
+    char move_direction;        //Move direction
+    int move_direction_offset;  //Move direction offset
+    char move_rotation;         //Move rotation
+    int move_rotation_offset;   //Move rotation offset
   };
 
   struct LineData
   {
-    int area_threshold_min;
-    int area_threshold_max;
-    int line_axis_H;
-    int line_axis_H_vibrate;
-    int line_main_V_s;
-    int line_main_V_e;
-    int line_dist_V_s;
-    int line_dist_V_e;
-    int line_dist_R_vibrate;
-    int line_mark_cnt;
-    int line_mark_cnt_limit;
+    int area_threshold_min;     //Ball center vibrate (pixels), when larger then send ball location
+    int area_threshold_max;     //Line area threshold max (pixels), larger as crossing
+    int line_axis_H;            //Line horizental axis (pixels), determined by camera's location
+    int line_axis_H_vibrate;    //Line horizental axis vibrate (pixels), when larger then make movement
+    int line_main_V_s;          //ROI of 1st line follow area start y (up->down)
+    int line_main_V_e;          //ROI of 1st line follow area end y (up->down)
+    int line_dist_V_s;          //ROI of 2nd line follow area start y (up->down)
+    int line_dist_V_e;          //ROI of 2nd line follow area end y (up->down)
+    int line_dist_R_vibrate;    //Line angle rotation vibrate (pixels), when larger then make rotatement
+    int line_mark_cnt;          //Count the crossing tag on the line (not including turns)
+    int line_mark_cnt_limit;    //When crossing tag count eqaled, end the current function
   };
 
   struct BallData
   {
-    int area_threshold_max;
-    int ball_ctr_x;
-    int ball_ctr_y;
-    int ball_ctr_vibrate;
+    int area_threshold_max;     //Ball area max threshold, when larger then exit ballTrack as ball already collected
+    int ball_ctr_x;             //Ball center x
+    int ball_ctr_y;             //Ball center y
+    int ball_ctr_vibrate;       //Ball center vibrate (pixels), when larger then send ball location
   };
 
   struct Location
   {
-    int location_cross_tag_cnt;
-    int location_cur;
+    int location_cross_tag_cnt; //Current period crossing tag count
+    int location_cur;           //Current crossing number the car at
   };
 
 #endif
