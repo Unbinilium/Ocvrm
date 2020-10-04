@@ -63,6 +63,9 @@ namespace ubn {
 
 #endif
 
+#ifndef UBN_COLOR_AREA
+#define UBN_COLOR_AREA
+
     template<typename T>
     static auto calPointDist(T &p1, T &p2)
     {
@@ -484,5 +487,8 @@ namespace ubn {
             return color_area_max_tag;
         }
 #endif
+
     }
+#endif
+
 }
