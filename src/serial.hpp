@@ -29,12 +29,12 @@ namespace ubn {
 
   struct SerialProp
   {
-    const char dev[32];
-    const int baud;
-    int fd;
-    unsigned int delay;
-    bool serial_status;
-    bool serial_keepalive;
+    const char dev[32];         //TTY device name
+    const int baud;             //Baudrate
+    int fd;                     //Opened serial
+    unsigned int delay;         //Recieve delay (micro second)
+    bool serial_status;         //Serial status
+    bool serial_keepalive;      //Serial keepalive
   };
 
   struct MoveData
@@ -45,29 +45,6 @@ namespace ubn {
     int move_direction_offset;  //Move direction offset
     char move_rotation;         //Move rotation
     int move_rotation_offset;   //Move rotation offset
-  };
-
-  struct LineData
-  {
-    int area_threshold_min;     //Ball center vibrate (pixels), when larger then send ball location
-    int area_threshold_max;     //Line area threshold max (pixels), larger as crossing
-    int line_axis_H;            //Line horizental axis (pixels), determined by camera's location
-    int line_axis_H_vibrate;    //Line horizental axis vibrate (pixels), when larger then make movement
-    int line_main_V_s;          //ROI of 1st line follow area start y (up->down)
-    int line_main_V_e;          //ROI of 1st line follow area end y (up->down)
-    int line_dist_V_s;          //ROI of 2nd line follow area start y (up->down)
-    int line_dist_V_e;          //ROI of 2nd line follow area end y (up->down)
-    int line_dist_R_vibrate;    //Line angle rotation vibrate (pixels), when larger then make rotatement
-    int line_mark_cnt;          //Count the crossing tag on the line (not including turns)
-    int line_mark_cnt_limit;    //When crossing tag count eqaled, end the current function
-  };
-
-  struct BallData
-  {
-    int area_threshold_max;     //Ball area max threshold, when larger then exit ballTrack as ball already collected
-    int ball_ctr_x;             //Ball center x
-    int ball_ctr_y;             //Ball center y
-    int ball_ctr_vibrate;       //Ball center vibrate (pixels), when larger then send ball location
   };
 
   struct Location

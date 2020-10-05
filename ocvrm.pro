@@ -1,6 +1,8 @@
-SOURCES += main.cpp
+SOURCES += \
+    src/main.cpp
 
 INCLUDEPATH += \
+    src \
     /usr/local/include/opencv4 \
     /usr/local/include/opencv4/opencv2
 
@@ -12,8 +14,11 @@ LIBS += \
     /usr/lib/libwiringPi*.so
 
 QMAKE_CXXFLAGS += \
-    std:c++17 \
     -O3
 
-HEADERS += \ 
-    color_area.hpp
+HEADERS += \
+    src/serial.hpp \
+    src/color_area.hpp \
+    src/line_follow.hpp \
+    src/ball_track.hpp
+

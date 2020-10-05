@@ -9,6 +9,8 @@
   * @date 2020-01-12
  **/
 
+#define DEBUG
+
 #ifndef UBN_COLOR_AREA_HPP
 #define UBN_COLOR_AREA_HPP
 
@@ -20,12 +22,10 @@
 #include <opencv2/highgui.hpp>
 #include <opencv2/imgproc.hpp>
 
-#define DEBUG
-
 namespace ubn {
 
-#ifndef UBN_COLOR_AREA_STRUCT
-#define UBN_COLOR_AREA_STRUCT
+#ifndef UBN_STRUCT
+#define UBN_STRUCT
 
     struct StreamProp
     {
@@ -61,6 +61,11 @@ namespace ubn {
         int threshold;                   //Minimal area threshold
         int color_location;              //Color at what the crossing tag number is
     };
+
+#endif
+
+#ifndef UBN_CALLBACK
+#define UBN_CALLBACK
 
     void callBack(int, void *)
     {}
@@ -227,8 +232,16 @@ namespace ubn {
             }
         }
 
-        cv::Point2f anchor[4] = { corners2f[0], corners2f[1], corners2f[2], corners2f[3] };
-        double anchor_dist[4] = { ubn::calPointDist(anchor[0], anchor[1]), ubn::calPointDist(anchor[1], anchor[2]), ubn::calPointDist(anchor[2], anchor[3]), ubn::calPointDist(anchor[3], anchor[0]) };
+        cv::Point2f anchor[4] = { corners2f[0],
+                                  corners2f[1],
+                                  corners2f[2],
+                                  corners2f[3]
+                                };
+        double anchor_dist[4] = { ubn::calPointDist(anchor[0], anchor[1]),
+                                  ubn::calPointDist(anchor[1], anchor[2]),
+                                  ubn::calPointDist(anchor[2], anchor[3]),
+                                  ubn::calPointDist(anchor[3], anchor[0])
+                                 };
         int width = int(MAX(anchor_dist[1], anchor_dist[3]));
         int height = int(MAX(anchor_dist[0], anchor_dist[2]));
 
@@ -304,7 +317,7 @@ namespace ubn {
         cv::Scalar input_upperb_tmp;
     };
 
-   static auto colorArea(ubn::StreamProp stream_prop, ubn::RectProp rect_prop, std::vector<ubn::ColorRange> color)
+    unsigned int colorArea(ubn::StreamProp stream_prop, ubn::RectProp rect_prop, std::vector<ubn::ColorRange> color)
     {
         unsigned int color_area_max_tag = 0;
 
