@@ -23,45 +23,46 @@
 
 #include <serial.hpp>
 
-namespace ubn {
+namespace ubn
+{
 
 #ifndef UBN_STRUCT
 #define UBN_STRUCT
 
-    struct StreamProp
-    {
-        const int camera_id;             //Camera index
-        const int api_id;                //API id
-        const int frame_width;           //Frame width
-        const int frame_height;          //Frame height
-        const int camrea_exposure_mode;  /*Camera v4l2 exposure mode
+  struct StreamProp
+  {
+    const int camera_id;            //Camera index
+    const int api_id;               //API id
+    const int frame_width;          //Frame width
+    const int frame_height;         //Frame height
+    const int camrea_exposure_mode; /*Camera v4l2 exposure mode
                                           1->manually exposure
                                           3->auto exposure
                                           */
-        const int camera_exposure;       //Camera v4l2 exposure value (78-10000)
-        int frame_threshold[4];          //ROI rect (start_x, end_x, start_y, end_y)
-        int camera_angle_V;              //Camera angle of vectical
-        int waitkey_delay;               //Delay of waitkey between processing 2 frame
-        int read_count;                  //Frame read count
-    };
+    const int camera_exposure;      //Camera v4l2 exposure value (78-10000)
+    int frame_threshold[4];         //ROI rect (start_x, end_x, start_y, end_y)
+    int camera_angle_V;             //Camera angle of vectical
+    int waitkey_delay;              //Delay of waitkey between processing 2 frame
+    int read_count;                 //Frame read count
+  };
 
-    struct RectProp
-    {
-        int contour_depth;               //Contour detect depth
-        double canny_threshold;          //Canny threshold max
-        double area_threshold;           //Squart area threshold max
-        double cosine_max_threshold;     //Cosine max threshold of each edge line
-        double approx_epsilon;           //Approx epsilon of lenth calculating
-    };
+  struct RectProp
+  {
+    int contour_depth;           //Contour detect depth
+    double canny_threshold;      //Canny threshold max
+    double area_threshold;       //Squart area threshold max
+    double cosine_max_threshold; //Cosine max threshold of each edge line
+    double approx_epsilon;       //Approx epsilon of lenth calculating
+  };
 
-    struct ColorRange
-    {
-        const std::string color_name;    //Color name
-        int lowerb[3];                   //HSV lowerb
-        int upperb[3];                   //HSV upperb
-        int threshold;                   //Minimal area threshold
-        int color_location;              //Color at what the crossing tag number is
-    };
+  struct ColorRange
+  {
+    const std::string color_name; //Color name
+    int lowerb[3];                //HSV lowerb
+    int upperb[3];                //HSV upperb
+    int threshold;                //Minimal area threshold
+    int color_location;           //Color at what the crossing tag number is
+  };
 
 #endif
 
@@ -70,10 +71,10 @@ namespace ubn {
 
   struct BallData
   {
-    int area_threshold_max;             //Ball area max threshold, when larger then exit ballTrack as ball already collected
-    int ball_ctr_x;                     //Ball center x
-    int ball_ctr_y;                     //Ball center y
-    int ball_ctr_vibrate;               //Ball center vibrate (pixels), when larger then send ball location
+    int area_threshold_max; //Ball area max threshold, when larger then exit ballTrack as ball already collected
+    int ball_ctr_x;         //Ball center x
+    int ball_ctr_y;         //Ball center y
+    int ball_ctr_vibrate;   //Ball center vibrate (pixels), when larger then send ball location
   };
 
 #endif
@@ -82,7 +83,8 @@ namespace ubn {
 #define UBN_CALLBACK
 
   void callBack(int, void *)
-  {}
+  {
+  }
 
 #endif
 
@@ -100,23 +102,23 @@ namespace ubn {
     cv::inRange(p_input_img_tmp, *p_input_lowerb, *p_input_upperb, p_input_img_tmp);
     cv::findContours(p_input_img_tmp, contours, hierarchy, cv::RETR_EXTERNAL, cv::CHAIN_APPROX_SIMPLE);
 
-    if(contours.size() > 0)
+    if (contours.size() > 0)
     {
       *p_area_max = contourArea(contours[area_max_tag]);
     }
 
-    for(unsigned int i = 0; i != contours.size(); i++)
+    for (unsigned int i = 0; i != contours.size(); i++)
     {
       p_area_tmp = contourArea(contours[i]);
 
-      if(p_area_tmp > *p_area_max)
+      if (p_area_tmp > *p_area_max)
       {
         *p_area_max = p_area_tmp;
         area_max_tag = i;
       }
     }
 
-    if(contours.size() > 0)
+    if (contours.size() > 0)
     {
       cv::Moments momentum = cv::moments(contours[area_max_tag], false);
       *p_line_ctr = cv::Point2f(float(momentum.m10 / momentum.m00), float(momentum.m01 / momentum.m00));
@@ -137,11 +139,11 @@ namespace ubn {
     bool serial_action = false;
     double area_max = 0;
 
-    ubn::MoveData move_data_tmp = { 'C',stream_prop.camera_angle_V,'D',0,'D',0 };
+    ubn::MoveData move_data_tmp = {'C', stream_prop.camera_angle_V, 'D', 0, 'D', 0};
     ubn::moveAction(&serial_prop, &move_data_tmp);
     ubn::fallBack(&serial_prop, true);
 
-    move_data_tmp = { 'B',0,'N',0,'N',0 };
+    move_data_tmp = {'B', 0, 'N', 0, 'N', 0};
 
     cv::VideoCapture capture;
     cv::Mat frame;
@@ -176,16 +178,16 @@ namespace ubn {
     cv::createTrackbar("V_L", slider_console_name, &input_color.lowerb[2], 255, ubn::callBack);
     cv::createTrackbar("V_U", slider_console_name, &input_color.upperb[2], 255, ubn::callBack);
 
-    while((capture.isOpened()) && ubn::fallBack(&serial_prop, false))
+    while ((capture.isOpened()) && ubn::fallBack(&serial_prop, false))
 
 #else
-    while((capture.isOpened()) && ubn::fallBack(&serial_prop, false) && (int(area_max) < input_ball_data.area_threshold_max))
+    while ((capture.isOpened()) && ubn::fallBack(&serial_prop, false) && (int(area_max) < input_ball_data.area_threshold_max))
 #endif
 
     {
       capture.read(frame);
 
-      if(frame.empty())
+      if (frame.empty())
       {
         continue;
       }
@@ -202,7 +204,7 @@ namespace ubn {
       ubn::ballPosition(&frame, &input_lowerb_tmp, &input_upperb_tmp, &ball_ctr, &area_max);
 
       int ball_ctr_x_displacement = int(ball_ctr.x) - input_ball_data.ball_ctr_x;
-      if(ball_ctr_x_displacement > input_ball_data.ball_ctr_vibrate)
+      if (ball_ctr_x_displacement > input_ball_data.ball_ctr_vibrate)
       {
         serial_action = true;
         move_data_tmp.move_direction = 'L';
@@ -210,7 +212,7 @@ namespace ubn {
 
         std::cout << "lineFollow: move left->" << ball_ctr_x_displacement << std::endl;
       }
-      if(ball_ctr_x_displacement < -input_ball_data.ball_ctr_vibrate)
+      if (ball_ctr_x_displacement < -input_ball_data.ball_ctr_vibrate)
       {
         serial_action = true;
         move_data_tmp.move_direction = 'R';
@@ -220,7 +222,7 @@ namespace ubn {
       }
 
       int ball_ctr_y_displacement = int(ball_ctr.y) - input_ball_data.ball_ctr_y;
-      if(ball_ctr_y_displacement > input_ball_data.ball_ctr_vibrate)
+      if (ball_ctr_y_displacement > input_ball_data.ball_ctr_vibrate)
       {
         serial_action = true;
         move_data_tmp.move_direction = 'U';
@@ -228,7 +230,7 @@ namespace ubn {
 
         std::cout << "lineFollow: move up->" << ball_ctr_y_displacement << std::endl;
       }
-      if(ball_ctr_y_displacement < -input_ball_data.ball_ctr_vibrate)
+      if (ball_ctr_y_displacement < -input_ball_data.ball_ctr_vibrate)
       {
         serial_action = true;
         move_data_tmp.move_direction = 'D';
@@ -237,12 +239,12 @@ namespace ubn {
         std::cout << "lineFollow: move down->" << ball_ctr_y_displacement << std::endl;
       }
 
-      if(serial_action == true)
+      if (serial_action == true)
       {
         ubn::moveAction(&serial_prop, &move_data_tmp);
 
         serial_action = false;
-        move_data_tmp = { 'B',0,'N',0,'N',0 };
+        move_data_tmp = {'B', 0, 'N', 0, 'N', 0};
       }
 
 #ifdef DEBUG
@@ -259,12 +261,11 @@ namespace ubn {
       cv::circle(frame, cv::Point(input_ball_data.ball_ctr_x, input_ball_data.ball_ctr_y), input_ball_data.ball_ctr_vibrate, cv::Scalar(255, 255, 255), 2, 8, 0);
       cv::imshow("frame", frame);
 
-      if(cv::waitKey(stream_prop.waitkey_delay) >= 0)
+      if (cv::waitKey(stream_prop.waitkey_delay) >= 0)
       {
         break;
       }
 #endif
-
     }
 
 #ifdef DEBUG
@@ -276,6 +277,6 @@ namespace ubn {
     std::cout << "lineFollow: end" << std::endl;
   }
 
-}
+} // namespace ubn
 
 #endif

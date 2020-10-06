@@ -22,29 +22,30 @@
 #include <unistd.h>
 #include <wiringSerial.h>
 
-namespace ubn {
+namespace ubn
+{
 
 #ifndef UBN_SERIAL_STRUCT
 #define UBN_SERIAL_STRUCT
 
   struct SerialProp
   {
-    const char dev[32];         //TTY device name
-    const int baud;             //Baudrate
-    int fd;                     //Opened serial
-    unsigned int delay;         //Recieve delay (micro second)
-    bool serial_status;         //Serial status
-    bool serial_keepalive;      //Serial keepalive
+    const char dev[32];    //TTY device name
+    const int baud;        //Baudrate
+    int fd;                //Opened serial
+    unsigned int delay;    //Recieve delay (micro second)
+    bool serial_status;    //Serial status
+    bool serial_keepalive; //Serial keepalive
   };
 
   struct MoveData
   {
-    char move_type;             //Move type
-    int move_argv;              //Move arguements
-    char move_direction;        //Move direction
-    int move_direction_offset;  //Move direction offset
-    char move_rotation;         //Move rotation
-    int move_rotation_offset;   //Move rotation offset
+    char move_type;            //Move type
+    int move_argv;             //Move arguements
+    char move_direction;       //Move direction
+    int move_direction_offset; //Move direction offset
+    char move_rotation;        //Move rotation
+    int move_rotation_offset;  //Move rotation offset
   };
 
   struct Location
@@ -57,7 +58,7 @@ namespace ubn {
 
   void initUart(ubn::SerialProp *serial_prop)
   {
-    if((serial_prop->fd = serialOpen(serial_prop->dev, serial_prop->baud)) >= 0)
+    if ((serial_prop->fd = serialOpen(serial_prop->dev, serial_prop->baud)) >= 0)
     {
       serialFlush(serial_prop->fd);
       serial_prop->serial_status = true;
@@ -82,12 +83,12 @@ namespace ubn {
 
   static void outUart(ubn::SerialProp *serial_prop, char input_data[])
   {
-      if(serial_prop->serial_status == false)
-      {
-        std::cout << "outUart: uart not opened, try to init uart->" << serial_prop->fd << std::endl;
+    if (serial_prop->serial_status == false)
+    {
+      std::cout << "outUart: uart not opened, try to init uart->" << serial_prop->fd << std::endl;
 
-        initUart(serial_prop);
-      }
+      initUart(serial_prop);
+    }
 
     serialPrintf(serial_prop->fd, input_data);
 
@@ -95,7 +96,7 @@ namespace ubn {
 
     serialFlush(serial_prop->fd);
 
-    if(serial_prop->serial_keepalive == true)
+    if (serial_prop->serial_keepalive == true)
     {
       std::cout << "outUart: uart keepalive->" << serial_prop->fd << std::endl;
     }
@@ -107,20 +108,20 @@ namespace ubn {
 
   void inUart(ubn::SerialProp *serial_prop, std::vector<int> *rec_data)
   {
-      if(serial_prop->serial_status == false)
-      {
-        std::cout << "inUart: uart not opened, try to init uart->" << serial_prop->fd << std::endl;
+    if (serial_prop->serial_status == false)
+    {
+      std::cout << "inUart: uart not opened, try to init uart->" << serial_prop->fd << std::endl;
 
-        initUart(serial_prop);
-      }
+      initUart(serial_prop);
+    }
 
-    while(1)
+    while (1)
     {
       usleep(serial_prop->delay);
 
       int in_cnt = serialDataAvail(serial_prop->fd);
 
-      for(int i = 0; i < in_cnt; i++)
+      for (int i = 0; i < in_cnt; i++)
       {
         int ch_tmp = serialGetchar(serial_prop->fd);
         rec_data->push_back(ch_tmp);
@@ -128,7 +129,7 @@ namespace ubn {
         std::cout << ch_tmp << " ";
       }
 
-      if(in_cnt > 0)
+      if (in_cnt > 0)
       {
         std::cout << std::endl;
 
@@ -140,13 +141,13 @@ namespace ubn {
 
     std::cout << "inUart: recieved->";
 
-    for(unsigned int i = 0; i < rec_data->size(); i++)
+    for (unsigned int i = 0; i < rec_data->size(); i++)
     {
       std::cout << rec_data->at(i) << " ";
     }
     std::cout << std::endl;
 
-    if(serial_prop->serial_keepalive == true)
+    if (serial_prop->serial_keepalive == true)
     {
       std::cout << "inUart: uart keepalive->" << serial_prop->fd << std::endl;
     }
@@ -160,37 +161,36 @@ namespace ubn {
   {
     char ch_tmp[16];
 
-    switch(input_move_data->move_type)
+    switch (input_move_data->move_type)
     {
     case 'M':
-      {
-        std::sprintf(ch_tmp, "%c%c%c%d:%d", 'M', input_move_data->move_direction, input_move_data->move_rotation, input_move_data->move_direction_offset, input_move_data->move_rotation_offset);
-        break;
-      }
+    {
+      std::sprintf(ch_tmp, "%c%c%c%d:%d", 'M', input_move_data->move_direction, input_move_data->move_rotation, input_move_data->move_direction_offset, input_move_data->move_rotation_offset);
+      break;
+    }
 
     case 'B':
-      {
-        std::sprintf(ch_tmp, "%c%c%c%d:%d", 'B', input_move_data->move_direction, input_move_data->move_rotation, input_move_data->move_direction_offset, input_move_data->move_rotation_offset);
-        break;
-      }
+    {
+      std::sprintf(ch_tmp, "%c%c%c%d:%d", 'B', input_move_data->move_direction, input_move_data->move_rotation, input_move_data->move_direction_offset, input_move_data->move_rotation_offset);
+      break;
+    }
 
     case 'L':
-      {
-        std::sprintf(ch_tmp, "%c%c%d", 'L', input_move_data->move_direction, input_move_data->move_argv);
-        break;
-      }
+    {
+      std::sprintf(ch_tmp, "%c%c%d", 'L', input_move_data->move_direction, input_move_data->move_argv);
+      break;
+    }
 
     case 'C':
-      {
-        std::sprintf(ch_tmp, "%c%d", 'C', input_move_data->move_argv);
-        break;
-      }
+    {
+      std::sprintf(ch_tmp, "%c%d", 'C', input_move_data->move_argv);
+      break;
+    }
 
     default:
-      {
-        std::cerr << "moveAction: unknown move type" << std::endl;
-      }
-
+    {
+      std::cerr << "moveAction: unknown move type" << std::endl;
+    }
     }
 
     char out[18];
@@ -204,16 +204,16 @@ namespace ubn {
 
   bool fallBack(ubn::SerialProp *serial_prop, bool wait_callback)
   {
-    if(serial_prop->serial_status == false)
+    if (serial_prop->serial_status == false)
     {
       std::cout << "fallBack: uart not opened, try to init uart->" << serial_prop->fd << std::endl;
 
       initUart(serial_prop);
     }
 
-    if(wait_callback == false)
+    if (wait_callback == false)
     {
-      if(serialDataAvail(serial_prop->fd) == 0)
+      if (serialDataAvail(serial_prop->fd) == 0)
       {
         return true;
       }
@@ -228,13 +228,14 @@ namespace ubn {
     {
       std::cout << "fallBack: waiting for fallback->" << serial_prop->fd << std::endl;
 
-      while(serialDataAvail(serial_prop->fd) == 0);
+      while (serialDataAvail(serial_prop->fd) == 0)
+        ;
 
       serialFlush(serial_prop->fd);
 
       return false;
     }
   }
-}
+} // namespace ubn
 
 #endif

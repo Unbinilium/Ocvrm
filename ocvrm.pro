@@ -2,7 +2,7 @@ SOURCES += \
     src/main.cpp
 
 INCLUDEPATH += \
-    src \
+    src/headers \
     /usr/local/include/opencv4 \
     /usr/local/include/opencv4/opencv2
 
@@ -17,8 +17,7 @@ QMAKE_CXXFLAGS += \
     -O3
 
 HEADERS += \
-    src/serial.hpp \
-    src/color_area.hpp \
-    src/line_follow.hpp \
-    src/ball_track.hpp
-
+    src/headers/serial.hpp \
+    src/headers/color_area.hpp \
+    src/headers/line_follow.hpp \
+    src/headers/ball_track.hpp
