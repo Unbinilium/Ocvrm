@@ -236,6 +236,6 @@ namespace ubn
       return false;
     }
   }
-} // namespace ubn
+}
 
 #endif
