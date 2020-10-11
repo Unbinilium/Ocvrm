@@ -396,7 +396,7 @@ namespace ubn {
 
             if(color_area[color_area_max_tag].area_sum < color[color_area_max_tag].threshold)
             {
-                break;
+                continue;
             }
 
             std::cout << "colorArea: " << color[color_area_max_tag].color_name << "->" << color_area[color_area_max_tag].area_sum << std::endl;
