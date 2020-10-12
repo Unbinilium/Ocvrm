@@ -6,8 +6,8 @@ OpenCV in RoboMaster. colorArea, lineFollow and ballTrack.
 
 ### Software
 
-- QtCreator 5.15.1
-- GCC 10.2
+- QtCreator 4.8.2
+- GCC 8.3.0
 - OpenCV 4.4.0
 - wiringPi 2.52
 
