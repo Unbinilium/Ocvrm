@@ -126,7 +126,7 @@ namespace ubn {
 
                 std::vector<cv::Point> approx;
 
-                for(auto& contour : contours)
+                for(auto &contour : contours)
                 {
                     cv::approxPolyDP(contour, approx, cv::arcLength(contour, true) * rect_prop.approx_epsilon, true);
 
